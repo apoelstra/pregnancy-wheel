@@ -68,16 +68,26 @@
 /centreshow {dup stringwidth pop 2 div neg 0 rmoveto show} bind def
 
 % Events (indexed by day)
+% Taken from https://www.babycenter.com/pregnancy/week-by-week
 /events <<
   1 (1st day of last period) 
-  1 7 mul 1 add (Fertility begins)
+  1 7 mul 1 add  (Fertility begins)
   2 7 mul 1 add  (Ovulation)
   4 7 mul 1 add  (Missed period)
-  7 7 mul 1 add  (Fetal heartbeet)
-  24 7 mul 1 add  (Viability)
-  37 7 mul 1 add  (Term pregnancy begins)
-  43 7 mul 1 add  (Term pregnancy ends)
-  280 (DUE DATE)
+  6 7 mul 1 add  (Fetal heartbeet)
+  7 7 mul 1 add  (Eyes, nose, ears)
+  8 7 mul 1 add  (Fingers and toes)
+  13 7 mul 1 add (Fingerprints)
+  14 7 mul 1 add (Facial expressions)
+  19 7 mul 1 add (Hair on scalp)
+  21 7 mul 1 add (Kicks you can feel)
+  25 7 mul 1 add (Viability)
+  27 7 mul 1 add (Hiccups and thumb sucking)
+  28 7 mul 1 add (Eyes can see light)
+  31 7 mul 1 add (Strong kicks)
+  37 7 mul 1 add (Term pregnancy begins)
+  40 7 mul 1 add (DUE DATE)
+  43 7 mul (Term pregnancy ends)
 >> def
 
 % Lengths (indexed by week)
@@ -168,9 +178,14 @@ pageX 2 div
 pageY 2 div
 translate
 
-0.5 setlinewidth
+0.2 setlinewidth
 
 % Main outline and little cutout circle
+gsave
+  0.25 setgray
+  [4 6] 0 setdash
+  newpath 0 0 radius 20 add 0 360 arc stroke
+grestore
 newpath 0 0 radius 0 360 arc stroke
 newpath 0 0 4 0 360 arc stroke
 % Ticks and day names
@@ -217,9 +232,14 @@ pageX 2 div
 pageY 2 div
 translate
 
-0.5 setlinewidth
-% Main outline and little cutout cross
-newpath 0 0 radius 0 360 arc stroke
+0.2 setlinewidth
+% main outline
+gsave
+  0.25 setgray
+  [2 4] 0 setdash
+  newpath 0 0 radius 0 360 arc stroke
+grestore
+% little cutout cross
 newpath
   -5 0 moveto 5 0 lineto
   0 -5 moveto 0 5 lineto
@@ -237,14 +257,13 @@ gsave
       radius 0 moveto 
       -12 0 rlineto
       0 0 radius 12 sub 0 weekAngle arc stroke
-    newpath
-      radius 0 moveto 
-      -36 0 rlineto stroke
     radius 6 sub 3 moveto week 2 string cvs centreshow
 
     lengths week known {
       /length lengths week get def
       radius 24 sub 3 moveto length centreshow
+      % Draw long line
+      newpath radius 0 moveto -36 0 rlineto stroke
     } if
   
     1 1 7 {
@@ -252,7 +271,30 @@ gsave
 
       events day known {
         /event events day get def
-        radius event stringwidth pop sub 40 sub -1 moveto event show
+        % Draw event text
+        radius event stringwidth pop sub 40 sub -2 moveto event show
+        % Special-case due date and first day
+        day 281 eq day 1 eq or {
+          1.5 setlinewidth
+          % Draw long line
+          newpath radius 0 moveto -36 0 rlineto stroke
+          % Draw arrowhead
+          newpath
+            radius 1 sub 0 moveto 
+            -4 -4 rlineto
+            0 8 rlineto
+          closepath fill
+          0.2 setlinewidth
+        } {
+          % Draw long line
+          newpath radius 0 moveto -36 0 rlineto stroke
+          % Draw arrowhead
+          newpath
+            radius 1 sub 0 moveto 
+            -2 -2 rlineto
+            0 4 rlineto
+          closepath fill
+        } ifelse
       } if
 
       day 7 mod 4 eq {
@@ -264,7 +306,7 @@ gsave
       dayAngle rotate
     } for
   } for
-  radius 0 moveto -36 0 rlineto stroke
+%  radius 0 moveto -36 0 rlineto stroke
 grestore
 
 pgsave restore
