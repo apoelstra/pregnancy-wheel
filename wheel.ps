@@ -87,7 +87,7 @@
   31 7 mul 1 add (Strong kicks)
   37 7 mul 1 add (Term pregnancy begins)
   40 7 mul 1 add (DUE DATE)
-  43 7 mul (Term pregnancy ends)
+  43 7 mul 1 add (Term pregnancy ends)
 >> def
 
 % Lengths (indexed by week)
@@ -203,12 +203,12 @@ newpath 0 0 4 0 360 arc stroke
     /d exch def
     newpath radius 0 moveto -15 0 rlineto stroke
     d 5 mod 0 eq {
-      newpath radius 0 moveto 10 0 rlineto stroke
       d 30 eq daysInMonth 30 eq and not {
+        newpath radius 0 moveto 10 0 rlineto stroke
         radius 2 add 1 moveto d 2 string cvs show
       } if
     } if
-    360 daysInYear div rotate
+    360 daysInYear div neg rotate
   } for
 } for
 
@@ -251,20 +251,8 @@ gsave
   /dayAngle 360 daysInYear div def
   /weekAngle dayAngle 7 mul def
   
-  1 1 43 {
+  1 1 44 {
     /week exch def
-    newpath
-      radius 0 moveto 
-      -12 0 rlineto
-      0 0 radius 12 sub 0 weekAngle arc stroke
-    radius 6 sub 3 moveto week 2 string cvs centreshow
-
-    lengths week known {
-      /length lengths week get def
-      radius 24 sub 3 moveto length centreshow
-      % Draw long line
-      newpath radius 0 moveto -36 0 rlineto stroke
-    } if
   
     1 1 7 {
       /day exch week 1 sub 7 mul add def
@@ -303,8 +291,21 @@ gsave
           radius 24 sub 0 moveto weight centreshow
         } if
       } if
-      dayAngle rotate
+      dayAngle neg rotate
     } for
+
+    newpath
+      radius 0 moveto 
+      -12 0 rlineto
+      0 0 radius 12 sub 0 weekAngle arc stroke
+    radius 6 sub 3 moveto week 2 string cvs centreshow
+
+    lengths week known {
+      /length lengths week get def
+      radius 24 sub 3 moveto length centreshow
+      % Draw long line
+      newpath radius 0 moveto -36 0 rlineto stroke
+    } if
   } for
 %  radius 0 moveto -36 0 rlineto stroke
 grestore
