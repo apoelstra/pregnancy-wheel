@@ -77,18 +77,43 @@
   6 7 mul 1 add  (Fetal heartbeet)
   7 7 mul 1 add  (Eyes, nose, ears)
   8 7 mul 1 add  (Fingers and toes)
+  9 7 mul 1 add  (Upper lip, eyelids)
+  10 7 mul 1 add (Teeth begin to harden)
+  11 7 mul 1 add (Kicks you can't feel)
+  12 7 mul 1 add (All vital organs and parts)
   13 7 mul 1 add (Fingerprints)
   14 7 mul 1 add (Facial expressions)
+  15 7 mul 1 add (Forming taste buds)
+  17 7 mul 1 add (Bony skeleton)
   19 7 mul 1 add (Hair on scalp)
   21 7 mul 1 add (Kicks you can feel)
+  23 7 mul 1 add (Hearing outside sounds)
   25 7 mul 1 add (Viability)
   27 7 mul 1 add (Hiccups and thumb sucking)
   28 7 mul 1 add (Eyes can see light)
+  29 7 mul 1 add (Preparing to breath)
   31 7 mul 1 add (Strong kicks)
+  32 7 mul 1 add (Genetalia formed)
+  34 7 mul 1 add (CNS and lungs maturing)
+  35 7 mul 1 add (Fully developed kidneys)
+  36 7 mul 1 add (Gaining 1oz/day)
   37 7 mul 1 add (Term pregnancy begins)
+  38 7 mul 1 add (Firm grasp)
+  39 7 mul 1 add (Good to go)
   40 7 mul 1 add (DUE DATE)
+  41 7 mul 1 add (Still good to go)
   43 7 mul 1 add (Term pregnancy ends)
 >> def
+
+% Modify this function to mark certain weeks as special
+/specialWeek {
+  1 dict begin
+  /wk exch 1 sub def
+  false
+  [0 12 25 40]  % <-- specifically add special weeks here
+  {wk exch eq or} forall
+  end
+} def
 
 % Lengths (indexed by week)
 /lengths <<
@@ -262,6 +287,22 @@ gsave
   /Helvetica findfont 7.5 scalefont setfont
   /dayAngle 360 daysInYear div def
   /weekAngle dayAngle 7 mul def
+
+  % Bold arc from weeks 37-43
+  gsave
+    2 setlinewidth
+    newpath 0 0 radius 12 sub
+    weekAngle -43 mul
+    weekAngle -37 mul arc stroke
+
+    weekAngle -43 mul rotate
+    radius 12 sub 0 moveto 
+    -24 0 rlineto stroke
+
+    weekAngle 6 mul rotate
+    radius 12 sub 0 moveto 
+    -24 0 rlineto stroke
+  grestore
   
   1 1 44 {
     /week exch def
@@ -272,7 +313,13 @@ gsave
       events day known {
         /event events day get def
         % Draw event text
+        week specialWeek {
+          /Helvetica-bold findfont 7.5 scalefont setfont
+        } if
         radius event stringwidth pop sub 40 sub -2 moveto event show
+        week specialWeek {
+          /Helvetica findfont 7.5 scalefont setfont
+        } if
         % Special-case due date and first day
         day 281 eq day 1 eq or {
           1.5 setlinewidth
